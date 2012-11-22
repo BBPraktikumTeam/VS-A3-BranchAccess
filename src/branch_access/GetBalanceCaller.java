@@ -1,25 +1,26 @@
 package branch_access;
 
-import java.net.InetSocketAddress;
+import mware_lib.Communicator;
+import mware_lib.Utilities;
 
 final class GetBalanceCaller extends Thread {
-	private final InetSocketAddress sender;
-	private final long senderObjectId;
+	private final Communicator comm;
+	private final long msgId;
 	private final Manager manager;
 	private final String accountID;
 
-	GetBalanceCaller(InetSocketAddress sender, long senderObjectId,
-			Manager manager, String accountID) {
-		this.sender = sender;
-		this.senderObjectId = senderObjectId;
+	GetBalanceCaller(Communicator comm, long msgId, Manager manager,
+			String accountID) {
+		this.comm = comm;
+		this.msgId = msgId;
 		this.manager = manager;
 		this.accountID = accountID;
 	}
 
 	@Override
 	public void run() {
-		String result = manager.createAccount(accountID);
-		String msg = "java.lang.String" + "," + result;
-		mware_lib.Communicator.send(sender, senderObjectId, msg);
+		double result = manager.getBalance(accountID);
+		comm.send(Utilities.join(",", String.valueOf(msgId),
+				String.valueOf(result)));
 	}
 }

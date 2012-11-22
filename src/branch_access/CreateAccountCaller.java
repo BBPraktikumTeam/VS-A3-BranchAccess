@@ -1,17 +1,18 @@
 package branch_access;
 
-import java.net.InetSocketAddress;
+import mware_lib.Communicator;
+import mware_lib.Utilities;
 
 final class CreateAccountCaller extends Thread {
-	private final InetSocketAddress sender;
-	private final long senderObjectId;
+	private final Communicator comm;
+	private final long msgId;
 	private final Manager manager;
 	private final String owner;
 
-	CreateAccountCaller(InetSocketAddress sender, long senderObjectId,
-			Manager manager, String owner) {
-		this.sender = sender;
-		this.senderObjectId = senderObjectId;
+	CreateAccountCaller(Communicator comm, long msgId, Manager manager,
+			String owner) {
+		this.comm = comm;
+		this.msgId = msgId;
 		this.manager = manager;
 		this.owner = owner;
 	}
@@ -19,7 +20,6 @@ final class CreateAccountCaller extends Thread {
 	@Override
 	public void run() {
 		String result = manager.createAccount(owner);
-		String msg = "java.lang.String" + "," + result;
-		mware_lib.Communicator.send(sender, senderObjectId, msg);
+		comm.send(Utilities.join(",", String.valueOf(msgId), result));
 	}
 }

@@ -1,6 +1,8 @@
 package branch_access;
 
-final class ManagerSkeleton extends Thread {
+import mware_lib.Communicator;
+
+final class ManagerSkeleton extends Thread implements mware_lib.Skeleton {
 	private final String name;
 	private final Manager manager;
 
@@ -9,7 +11,17 @@ final class ManagerSkeleton extends Thread {
 		this.manager=manager;
 	}
 
-	void unmarshal(String msg) {
-		
+	public void unmarshal(String msg, Communicator comm) {
+		String[] resultLine = msg.split(",");
+		long msgId=Long.parseLong(resultLine[1]);
+		String method=resultLine[2];
+		String param=resultLine[3];
+		if (method.equals("createAccount")) {
+			new CreateAccountCaller(comm, msgId, manager, param).start();
+		} else if (method.equals("getBalance")) {
+			new GetBalanceCaller(comm, msgId, manager, param).start();
+		} else {
+			// method name not supported, throw exception
+		}
 	}
 }
