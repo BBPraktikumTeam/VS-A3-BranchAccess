@@ -1,6 +1,6 @@
 package branch_access;
 
-public final class ManagerStub extends Manager {
+public final class ManagerProxy extends Manager {
 
 	@Override
 	public String createAccount(String owner) {
