@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import branch_access.Manager;
+import branch_access.ManagerDummy;
+
 public class TestUtilities {
 
 	@Test
@@ -28,6 +31,16 @@ public class TestUtilities {
 	public void testGetTypeForObject() {
 		assertEquals("branch_access.Manager",
 				Utilities.getTypeForObject(new branch_access.ManagerProxy()));
+	}
+
+	@Test
+	public void testCreateSkeleton() {
+		assertNull(SkeletonBindings.getSkeleton("ba_TestCreateSkeleton_01"));
+		Manager m = new ManagerDummy();
+		Skeleton skel = Utilities.createSkeleton("ba_TestCreateSkeleton_01", m);
+		SkeletonBindings.addSkeleton(skel);
+		assertSame(skel,
+				SkeletonBindings.getSkeleton("ba_TestCreateSkeleton_01"));
 	}
 
 }

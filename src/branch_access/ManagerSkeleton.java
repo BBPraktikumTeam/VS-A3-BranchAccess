@@ -2,20 +2,21 @@ package branch_access;
 
 import mware_lib.Communicator;
 
-final class ManagerSkeleton extends Thread implements mware_lib.Skeleton {
+public final class ManagerSkeleton extends Thread implements mware_lib.Skeleton {
 	private final String name;
 	private final Manager manager;
 
-	ManagerSkeleton(String name, Manager manager) {
-		this.name=name;
-		this.manager=manager;
+	public ManagerSkeleton(String name, Manager manager) {
+		this.name = name;
+		this.manager = manager;
 	}
 
+	@Override
 	public void unmarshal(String msg, Communicator comm) {
 		String[] resultLine = msg.split(",");
-		long msgId=Long.parseLong(resultLine[1]);
-		String method=resultLine[2];
-		String param=resultLine[3];
+		long msgId = Long.parseLong(resultLine[1]);
+		String method = resultLine[2];
+		String param = resultLine[3];
 		if (method.equals("createAccount")) {
 			new CreateAccountCaller(comm, msgId, manager, param).start();
 		} else if (method.equals("getBalance")) {
@@ -23,5 +24,10 @@ final class ManagerSkeleton extends Thread implements mware_lib.Skeleton {
 		} else {
 			// method name not supported, throw exception
 		}
+	}
+
+	@Override
+	public String name() {
+		return name;
 	}
 }

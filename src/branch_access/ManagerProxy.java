@@ -6,10 +6,12 @@ import java.util.concurrent.Semaphore;
 import mware_lib.CommunicatorBindings;
 import mware_lib.MessageId;
 import mware_lib.MessageSemaphores;
-import mware_lib.ReplyMessages;
+import mware_lib.ReplyMessage;
+import mware_lib.ResultMessage;
+import mware_lib.ReplyMessageQueue;
 import mware_lib.RequestMessage;
 
-public final class ManagerProxy extends Manager implements mware_lib.Proxy {
+public final class ManagerProxy extends Manager {
 
 	private final String name;
 	private final InetSocketAddress address;
@@ -19,7 +21,7 @@ public final class ManagerProxy extends Manager implements mware_lib.Proxy {
 		this.address = InetSocketAddress.createUnresolved("localhost", 0);
 	}
 
-	ManagerProxy(String name, InetSocketAddress address) {
+	public ManagerProxy(String name, InetSocketAddress address) {
 		this.name = name;
 		this.address = address;
 	}
@@ -28,30 +30,38 @@ public final class ManagerProxy extends Manager implements mware_lib.Proxy {
 	public String createAccount(String owner) {
 		long id = MessageId.getNewId();
 		Semaphore sem = MessageSemaphores.create(id);
-		RequestMessage req = new RequestMessage(id, name, address,
-				"createAccount", owner);
+		RequestMessage req = new RequestMessage(id, name, "createAccount",
+				owner);
 		CommunicatorBindings.getCommunicator(address).send(req.toString());
 		try {
 			sem.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		return ReplyMessages.pop(id).value();
+		ReplyMessage rep = ReplyMessageQueue.pop(id);
+		if (rep.exception()) {
+			throw new RuntimeException();
+		}
+		return ((ResultMessage)rep).value();
 	}
 
 	@Override
 	public double getBalance(String accountID) {
 		long id = MessageId.getNewId();
 		Semaphore sem = MessageSemaphores.create(id);
-		RequestMessage req = new RequestMessage(id, name, address,
-				"getBalance", accountID);
+		RequestMessage req = new RequestMessage(id, name, "getBalance",
+				accountID);
 		CommunicatorBindings.getCommunicator(address).send(req.toString());
 		try {
 			sem.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		return Double.valueOf(ReplyMessages.pop(id).value());
+		ReplyMessage rep = ReplyMessageQueue.pop(id);
+		if (rep.exception()) {
+			throw new RuntimeException();
+		}
+		return Double.valueOf(((ResultMessage)rep).value());
 	}
 
 }
