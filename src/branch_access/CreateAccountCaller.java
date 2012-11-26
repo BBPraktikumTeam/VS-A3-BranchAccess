@@ -20,6 +20,6 @@ final class CreateAccountCaller extends Thread {
 	@Override
 	public void run() {
 		String result = manager.createAccount(owner);
-		comm.send(Utilities.join(",", String.valueOf(msgId), result));
+		comm.send(Utilities.join(",", "result",String.valueOf(msgId), result));
 	}
 }
