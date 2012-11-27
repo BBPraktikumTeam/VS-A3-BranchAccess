@@ -19,8 +19,13 @@ final class GetBalanceCaller extends Thread {
 
 	@Override
 	public void run() {
-		double result = manager.getBalance(accountID);
-		comm.send(Utilities.join(",", "result",String.valueOf(msgId),
-				String.valueOf(result)));
+		try {
+			double result = manager.getBalance(accountID);
+			comm.send(Utilities.join(",", "result", String.valueOf(msgId),
+					String.valueOf(result)));
+		} catch (Exception e) {
+			comm.send(Utilities.join(",", "exception", e.getClass().toString(),
+					e.getMessage()));
+		}
 	}
 }

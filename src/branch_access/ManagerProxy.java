@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Semaphore;
 
 import mware_lib.CommunicatorBindings;
+import mware_lib.ExceptionMessage;
 import mware_lib.MessageId;
 import mware_lib.MessageSemaphores;
 import mware_lib.ReplyMessage;
@@ -40,7 +41,7 @@ public final class ManagerProxy extends Manager {
 		}
 		ReplyMessage rep = ReplyMessageQueue.pop(id);
 		if (rep.exception()) {
-			throw new RuntimeException();
+			throw new RuntimeException(((ExceptionMessage) rep).message());
 		}
 		return ((ResultMessage)rep).value();
 	}
@@ -59,7 +60,7 @@ public final class ManagerProxy extends Manager {
 		}
 		ReplyMessage rep = ReplyMessageQueue.pop(id);
 		if (rep.exception()) {
-			throw new RuntimeException();
+			throw new RuntimeException(((ExceptionMessage) rep).message());
 		}
 		return Double.valueOf(((ResultMessage)rep).value());
 	}
