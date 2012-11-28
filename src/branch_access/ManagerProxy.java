@@ -33,16 +33,21 @@ public final class ManagerProxy extends Manager {
 		Semaphore sem = MessageSemaphores.create(id);
 		RequestMessage req = new RequestMessage(id, name, "createAccount",
 				owner);
+		System.out.println("Sending createAccount request");
 		CommunicatorBindings.getCommunicator(address).send(req.toString());
 		try {
+			System.out.println("Trying acquire semaphore");
 			sem.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Receiving Message");
 		ReplyMessage rep = ReplyMessageQueue.pop(id);
 		if (rep.exception()) {
+			System.out.println("Throwing error message");
 			throw new RuntimeException(((ExceptionMessage) rep).message());
 		}
+		System.out.println("Returning Value");
 		return ((ResultMessage)rep).value();
 	}
 
