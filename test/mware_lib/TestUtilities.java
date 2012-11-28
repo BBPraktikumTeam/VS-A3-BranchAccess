@@ -10,7 +10,7 @@ import branch_access.ManagerDummy;
 public class TestUtilities {
 
 	@Test
-	public void createProxyWithManager() {
+	public void createProxyManager() {
 		assertTrue(mware_lib.Utilities.createProxy("name",
 				"branch_access.Manager", "localhost", 12345) instanceof branch_access.Manager);
 	}

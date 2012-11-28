@@ -4,14 +4,12 @@ public final class ManagerDummy extends Manager {
 
 	@Override
 	public String createAccount(String owner) {
-		// TODO Auto-generated method stub
-		return null;
+		return "FAKE_ACCOUNT";
 	}
 
 	@Override
 	public double getBalance(String accountID) {
-		// TODO Auto-generated method stub
-		return 0;
+		return 6.66;
 	}
 
 }

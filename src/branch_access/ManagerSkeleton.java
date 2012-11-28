@@ -15,8 +15,8 @@ public final class ManagerSkeleton extends Thread implements mware_lib.Skeleton 
 	public void unmarshal(String msg, Communicator comm) {
 		String[] resultLine = msg.split(",");
 		long msgId = Long.parseLong(resultLine[1]);
-		String method = resultLine[2];
-		String param = resultLine[3];
+		String method = resultLine[3];
+		String param = resultLine[4];
 		if (method.equals("createAccount")) {
 			new CreateAccountCaller(comm, msgId, manager, param).start();
 		} else if (method.equals("getBalance")) {
