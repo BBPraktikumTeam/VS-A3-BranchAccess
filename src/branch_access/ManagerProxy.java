@@ -44,8 +44,7 @@ public final class ManagerProxy extends Manager {
 		System.out.println("Receiving Message");
 		ReplyMessage rep = ReplyMessageQueue.pop(id);
 		if (rep.exception()) {
-			System.out.println("Throwing error message");
-			throw new RuntimeException(((ExceptionMessage) rep).message());
+			((ExceptionMessage) rep).throwAsException();
 		}
 		System.out.println("Returning Value");
 		return ((ResultMessage)rep).value();
@@ -65,7 +64,7 @@ public final class ManagerProxy extends Manager {
 		}
 		ReplyMessage rep = ReplyMessageQueue.pop(id);
 		if (rep.exception()) {
-			throw new RuntimeException(((ExceptionMessage) rep).message());
+			((ExceptionMessage) rep).throwAsException();
 		}
 		return Double.valueOf(((ResultMessage)rep).value());
 	}
