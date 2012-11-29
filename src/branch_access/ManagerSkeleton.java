@@ -2,7 +2,7 @@ package branch_access;
 
 import mware_lib.Communicator;
 
-public final class ManagerSkeleton extends Thread implements mware_lib.Skeleton {
+public final class ManagerSkeleton implements mware_lib.Skeleton {
 	private final String name;
 	private final Manager manager;
 
